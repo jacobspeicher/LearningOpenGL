@@ -12,23 +12,35 @@ const char* vertexShaderSource = "#version 330 core\n"
 "  vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
 "}\0";
 
+const char* colorVertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"layout (location = 1) in vec3 aColor;\n"
+"out vec4 vertexColor;\n"
+"void main()\n"
+"{\n"
+"  gl_Position = vec4(aPos, 1.0);\n"
+"  vertexColor = vec4(aColor, 1.0);\n"
+"}\0";
+
 // fragment shader
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "in vec4 vertexColor;\n"
 "void main()\n"
 "{\n"
-"  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"  FragColor = vertexColor;\n"
 "}\0";
-
+//"  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 
 // yellow fragment shader
 const char* yellowFragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"uniform vec4 ourColor;\n"
 "void main()\n"
 "{\n"
-"  FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
+"  FragColor = ourColor;\n"
 "}\0";
+//"  FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
 
 float doubleVertices[] =
 {
@@ -43,9 +55,10 @@ float doubleVertices[] =
 // a triangle in 3d space (flat z plane)
 float leftVertices[] =
 {
-	-1.0f, 0.5f, 0.0f, // left
-	-0.5f, 1.0f, 0.0f,	// top
-	0.0f, 0.5f, 0.0f,	// right
+	// pos				// colors
+	-1.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // left
+	-0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,	// top
+	0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	// right
 };
 
 float rightVertices[] =
@@ -130,7 +143,7 @@ int main() {
 	// create vertex objects
 	unsigned int leftVAO;
 	unsigned int leftVBO;
-	
+
 	unsigned int rightVAO;
 	unsigned int rightVBO;
 
@@ -147,11 +160,14 @@ int main() {
 	// copy vertex data into the left VBO
 	glBufferData(GL_ARRAY_BUFFER, sizeof(leftVertices), leftVertices, GL_STATIC_DRAW);
 
-	// interpret the vertex data
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
+	// interpret the vertex data for positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	// enable the vertex attrib with the vertex attrib location
 	glEnableVertexAttribArray(0);
+
+	// interpret the vertex data for colors and enable
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// bind right objects
 	glBindVertexArray(rightVAO);
@@ -168,23 +184,23 @@ int main() {
 #pragma endregion TwoArraysMoreObjects
 
 	// create the vertex shader
+	unsigned int fragmentShader;
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	// attach vertex shader source and compile
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 
-#pragma region OrangeShaderProgram
-	// create shader objects
-	unsigned int fragmentShader;
-	unsigned int shaderProgram;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	shaderProgram = glCreateProgram();
-
 	// attach fragment shader source and compile
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
+
+#pragma region OrangeShaderProgram
+	// create shader objects
+	unsigned int shaderProgram;
+	shaderProgram = glCreateProgram();
 
 	// attach compiled shaders to the program
 	glAttachShader(shaderProgram, vertexShader);
@@ -192,10 +208,27 @@ int main() {
 
 	// link the shaders together
 	glLinkProgram(shaderProgram);
+#pragma endregion OrangeShaderProgram
+
+#pragma region VertexColorShaderProgram
+	// create shader objects
+	unsigned int colorVertexShader;
+	unsigned int colorVertexShaderProgram;
+	colorVertexShader = glCreateShader(GL_VERTEX_SHADER);
+	colorVertexShaderProgram = glCreateProgram();
+
+	glShaderSource(colorVertexShader, 1, &colorVertexShaderSource, NULL);
+	glCompileShader(colorVertexShader);
+
+	glAttachShader(colorVertexShaderProgram, colorVertexShader);
+	glAttachShader(colorVertexShaderProgram, fragmentShader);
+
+	glLinkProgram(colorVertexShaderProgram);
 
 	// delete compiled shaders
 	glDeleteShader(fragmentShader);
-#pragma endregion OrangeShaderProgram
+	glDeleteShader(colorVertexShader);
+#pragma endregion VertexColorShaderProgram
 
 #pragma region YellowShaderProgram
 	unsigned int yellowFragmentShader;
@@ -241,12 +274,22 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 #pragma endregion DrawSingleArrayMoreVertices
 #pragma region DrawTwoArraysMoreObjects
+		glUseProgram(colorVertexShaderProgram);
+
 		// draw left triangle
 		glBindVertexArray(leftVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		// change the uniform fragment shader
+		float timeValue = glfwGetTime();
+		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+
+		int vertexColorLocation = glGetUniformLocation(yellowShaderProgram, "ourColor");
+
 		// switch to the yellow shader program
 		glUseProgram(yellowShaderProgram);
+
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 		// draw right triangle
 		glBindVertexArray(rightVAO);
@@ -261,6 +304,6 @@ int main() {
 
 	// clean/delete all of GLFW's resources
 	glfwTerminate();
-	
+
 	return 0;
 }
