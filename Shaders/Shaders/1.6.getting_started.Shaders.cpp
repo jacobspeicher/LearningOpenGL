@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "Shader.h"
 
 // vertex shader
 const char* vertexShaderSource = "#version 330 core\n"
@@ -254,6 +255,8 @@ int main() {
 	// delete the vertex shader
 	glDeleteShader(vertexShader);
 
+	Shader upsideDownShader("vertex.vs", "fragment.fs");
+
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -265,7 +268,9 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// activate shader program
-		glUseProgram(shaderProgram);
+		//glUseProgram(shaderProgram);
+		upsideDownShader.use();
+		upsideDownShader.setFloat("xOffset", 0.1f);
 
 #pragma region DrawSingleArrayMoreVertices
 		glBindVertexArray(VAO);
