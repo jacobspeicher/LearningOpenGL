@@ -13,11 +13,22 @@ float vertices[] =
 	-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,	// top left
 };
 
+//float vertices[] =
+//{
+//	// pos			   // colors		 // texture coords
+//	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.51f, 0.51f,		// top right
+//	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.51f, 0.5f,	// bottom right
+//	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.5f,	// bottom left
+//	-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.5f, 0.51f,	// top left
+//};
+
 unsigned int indices[] =
 {
 	0, 1, 3,
 	1, 2, 3,
 };
+
+float mixFactor = 0.2f;
 
 // callback to modify rendering area when window is resized
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -30,6 +41,22 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE)
+	{
+		if (mixFactor < 1.0f)
+		{
+			mixFactor += 0.01f;
+		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE)
+	{
+		if (mixFactor > 0.0f)
+		{
+			mixFactor -= 0.01f;
+		}
 	}
 }
 
@@ -102,10 +129,23 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// set the texture wrapping/filtering options
+	// TEXTURE WRAPPING
+	//		- GL_REPEAT: the default behavior for textures, repeats the texture image
+	// 		- GL_MIRRORED_REPEAT: same as GL_REPEAT but mirrors the image with each repeat
+	// 		- GL_CLAMP_TO_EDGE: Clamps the coordinates between 0 and 1. Result is that higher coordinates become clamped to the edge, resulting in a stretched edge pattern
+	//		- GL_CLAMP_TO_BORDER: coordinates outside the range are now given a user specified border color
+	// 	TEXTURE FILTERING (which texture pixel [texel] to map the texture coordinate to)
+	//		- GL_NEAREST: default texture filtering method of OpenGL. Selects the texel with a center closest to the texture coordinate
+	//		- GL_LINEAR: (bi)linear filtering, takes an interpolated value from the texture coordinates neighboring texels, approximating a color between the texels
+	// 	TEXTURE FILTERING FOR MIPMAPS
+	//		- GL_NEAREST_MIPMAP_NEAREST: takes the nearest mipmap to match the pixel saize and uses nearest neighbor interpolation for texture sampling
+	//		- GL_LINEAR_MIPMAP_NEAREST: takes the nearest mipmap level and samples that level using linear interpolation
+	//		- GL_NEAREST_MIPMAP_LINEAR: linearly interpolates between the two mipmaps that most closely match the size of a pixel and samples the interpolated level via nearest neighbor interpolation
+	//		- GL_LINEAR_MIPMAP_LINEAR: linearly interpolates between the two closest mipmaps and samples the interpolated level via linear interpolation
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// load image data
 	int width, height, nrChannels;
@@ -140,15 +180,15 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, texture2);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
 
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -179,6 +219,8 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		shaderProgram.use();
+
+		shaderProgram.setFloat("mixFactor", mixFactor);
 
 		glBindVertexArray(VAO);
 
