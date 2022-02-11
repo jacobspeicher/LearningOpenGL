@@ -7,13 +7,59 @@
 #include "stb_image.h"
 #include "Shader.h"
 
+//float vertices[] =
+//{
+//	// pos			   // colors		 // texture coords
+//	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,		// top right
+//	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// bottom right
+//	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,	// bottom left
+//	-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,	// top left
+//};
+
 float vertices[] =
 {
-	// pos			   // colors		 // texture coords
-	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,		// top right
-	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// bottom right
-	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,	// bottom left
-	-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,	// top left
+	// pos					 // texture coords
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 0.0f,	 // bottom left
+	 0.5f,	-0.5f,	-0.5f,	 1.0f,	 0.0f,	 // bottom right
+	 0.5f,	 0.5f,	-0.5f,	 1.0f,	 1.0f,	 // top right
+	 0.5f,	 0.5f,	-0.5f,	 1.0f,	 1.0f,	 // top right
+	-0.5f,	 0.5f,	-0.5f,	 0.0f,	 1.0f,	 // top left
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 0.0f,	 // bottom left
+
+	-0.5f,	-0.5f,	 0.5f,	 0.0f,	 0.0f,	 // bottom left
+	 0.5f,	-0.5f,	 0.5f,	 1.0f,	 0.0f,	 // bottom right
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 1.0f,	 // top right
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 1.0f,	 // top right
+	-0.5f,	 0.5f,	 0.5f,	 0.0f,	 1.0f,	 // top left
+	-0.5f,	-0.5f,	 0.5f,	 0.0f,	 0.0f,	 // bottom left
+
+	-0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // bottom left
+	-0.5f,	 0.5f,	-0.5f,	 1.0f,	 1.0f,	 // bottom right
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // top right
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // top right
+	-0.5f,	-0.5f,	 0.5f,	 0.0f,	 0.0f,	 // top left
+	-0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // bottom left
+
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // bottom left
+	 0.5f,	 0.5f,	-0.5f,	 1.0f,	 1.0f,	 // bottom right
+	 0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // top right
+	 0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // top right
+	 0.5f,	-0.5f,	 0.5f,	 0.0f,	 0.0f,	 // top left
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // bottom left
+
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // bottom left
+	 0.5f,	-0.5f,	-0.5f,	 1.0f,	 1.0f,	 // bottom right
+	 0.5f,	-0.5f,	 0.5f,	 1.0f,	 0.0f,	 // top right
+	 0.5f,	-0.5f,	 0.5f,	 1.0f,	 0.0f,	 // top right
+	-0.5f,	-0.5f,	 0.5f,	 0.0f,	 0.0f,	 // top left
+	-0.5f,	-0.5f,	-0.5f,	 0.0f,	 1.0f,	 // bottom left
+
+	-0.5f,	 0.5f,	-0.5f,	 0.0f,	 1.0f,	 // bottom left
+	 0.5f,	 0.5f,	-0.5f,	 1.0f,	 1.0f,	 // bottom right
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // top right
+	 0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 // top right
+	-0.5f,	 0.5f,	 0.5f,	 0.0f,	 0.0f,	 // top left
+	-0.5f,	 0.5f,	-0.5f,	 0.0f,	 1.0f, 	 // bottom left
 };
 
 //float vertices[] =
@@ -112,15 +158,19 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// interpret and enable the position data
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	/*glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);*/
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// interpret and enable the color data
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);*/
 
 	// interpret and enable the texture coords data
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	/*glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);*/
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	// flip loaded images upside down so they appear upside right
@@ -208,7 +258,39 @@ int main()
 	shaderProgram.setInt("texture1", 0);
 	shaderProgram.setInt("texture2", 1);
 
-	
+#pragma region Going3DMatrices
+	// create the model matrix (translations, scaling , and/or rotations to transform local vertices to world space)
+	/*glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));*/
+
+	// create the view matrix (transforms the world space to view space to be seen from the camera/viewers POV)
+	// this moves the scene along the negative Z-axis to give the impression the camera is moving backward
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	// create the projection matrix (transforms the view space to clip space, gives a lil perspective)
+	glm::mat4 projection;
+	// (fov, aspect ratio, near plane, far plane)
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.5f, 100.0f);
+#pragma endregion Going3DMatrices
+
+#pragma region CubePositions
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,	2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),
+		glm::vec3(-1.3f, 1.0f, -1.5f),
+	};
+#pragma endregion CubePositions
+
+	// enable depth testing to draw the cube correctly
+	glEnable(GL_DEPTH_TEST);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -216,7 +298,7 @@ int main()
 		processInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0); // active texture unit first
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -230,20 +312,43 @@ int main()
 		shaderProgram.setFloat("mixFactor", mixFactor);
 
 		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		/*trans = glm::translate(trans, glm::vec3(0.55f, -0.55f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));*/
 
 		shaderProgram.setMat4("transform", 1, trans);
+		shaderProgram.setMat4("view", 1, view);
+		shaderProgram.setMat4("projection", 1, projection);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (unsigned int i = 0; i < 10; ++i)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
 
-		trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+			if (i % 3 == 0)
+			{
+				model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+			}
+			else
+			{
+				model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			}
+			
+			shaderProgram.setMat4("model", 1, model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		}
+
+		/*trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(-0.75f, 0.75f, 0.0f));
 		trans = glm::scale(trans, glm::vec3(sin((float)glfwGetTime()), sin((float)glfwGetTime()), sin((float)glfwGetTime())));
 
-		shaderProgram.setMat4("transform", 1, trans);
+		shaderProgram.setMat4("transform", 1, trans);*/
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		glBindVertexArray(0);
 
