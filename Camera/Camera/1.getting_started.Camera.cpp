@@ -6,6 +6,7 @@
 #include <iostream>
 #include "stb_image.h"
 #include "Shader.h"
+#include "Camera.h"
 
 float vertices[] =
 {
@@ -55,18 +56,21 @@ float vertices[] =
 
 float mixFactor = 0.2f;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+// camera vectors and variables defined
+//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+//
+//float yaw = -90.0f;
+//float pitch = 0.0f;
+//float fov = 45.0f;
+
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = 400.0f, lastY = 300.0f;
+bool firstMouse = true;
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;	// time of last frame
-
-float yaw = -90.0f;
-float pitch = 0.0f;
-float lastX = 400.0f, lastY = 300.0f;
-bool firstMouse = true;
-float fov = 45.0f;
 
 // callback to modify rendering area when window is resized
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -74,46 +78,56 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
 	if (firstMouse)
 	{
 		lastX = xpos;
 		lastY = ypos;
 		firstMouse = false;
 	}
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;	// reversed, y ranges bottom to top
+
+	float xOffset = xpos - lastX;
+	float yOffset = lastY - ypos;	// reversed, y ranges bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
 
-	const float sensitivity = 0.1f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+	camera.ProcessMouseMovement(xOffset, yOffset);
 
-	yaw += xoffset;
-	pitch += yoffset;
+	// camera calculations defined
+	//const float sensitivity = 0.1f;
+	//xoffset *= sensitivity;
+	//yoffset *= sensitivity;
 
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	//yaw += xoffset;
+	//pitch += yoffset;
 
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(direction);
+	//if (pitch > 89.0f)
+	//	pitch = 89.0f;
+	//if (pitch < -89.0f)
+	//	pitch = -89.0f;
+
+	//glm::vec3 direction;
+	//direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	//direction.y = sin(glm::radians(pitch));
+	//direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	//cameraFront = glm::normalize(direction);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
-	fov -= (float)yoffset;
+	camera.ProcessMouseScroll(static_cast<float>(yOffset));
+
+	// camera fov calculations defined
+	/*fov -= (float)yoffset;
 	if (fov < 1.0f)
 		fov = 1.0f;
 	if (fov > 45.0f)
-		fov = 45.0f;
+		fov = 45.0f;*/
 }
 
 void processInput(GLFWwindow* window)
@@ -139,7 +153,17 @@ void processInput(GLFWwindow* window)
 		}
 	}
 
-	const float cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+
+	// camera movement defined
+	/*const float cameraSpeed = 2.5f * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -147,7 +171,7 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;*/
 
 	// cameraPos.y = 0.0f; - FPS camera, keeps you stuck to the "ground"
 }
@@ -292,13 +316,15 @@ int main()
 
 	// calculate the camera's direction (direction doesn't change with vector length)
 	// subtract the target from the camera pos so that we get the negated direction (camera's pos z-axis is our negative z-axis)
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+	// camera direction calculations defined
+	/*glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);*/
 
 	// get the camera's positive x-axis vector
 	// cross product between up vector and camera direction gives us a perpendicular vector facing in the positive x-axis direction relative to the camera
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+	// camera right vector calculations defined
+	/*glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));*/
 
 	// get the camera's position y-axis vector
 	// cross product between the camera's z-axis and x-axis will give us a perpendicular vector facing in the positive y-axis direction relative to the camera
@@ -376,11 +402,11 @@ int main()
 		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		*/
 
-		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
+		/*glm::mat4 view = glm::mat4(1.0f);
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);*/
+		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
 
 		shaderProgram.use();
 
