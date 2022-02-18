@@ -15,47 +15,47 @@ void processInput(GLFWwindow* window);
 float vertices[] =
 {
 	// pos
-	-0.5f,	-0.5f,	-0.5f,
-	 0.5f,	-0.5f,	-0.5f,
-	 0.5f,	 0.5f,	-0.5f,
-	 0.5f,	 0.5f,	-0.5f,
-	-0.5f,	 0.5f,	-0.5f,
-	-0.5f,	-0.5f,	-0.5f,
+	-0.5f,	-0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
+	 0.5f,	-0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
+	 0.5f,	 0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
+	 0.5f,	 0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
+	-0.5f,	 0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
+	-0.5f,	-0.5f,	-0.5f,   0.0f,   0.0f,  -1.0f,
 
-	-0.5f,	-0.5f,	 0.5f,
-	 0.5f,	-0.5f,	 0.5f,
-	 0.5f,	 0.5f,	 0.5f,
-	 0.5f,	 0.5f,	 0.5f,
-	-0.5f,	 0.5f,	 0.5f,
-	-0.5f,	-0.5f,	 0.5f,
+	-0.5f,	-0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
+	 0.5f,	-0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
+	 0.5f,	 0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
+	 0.5f,	 0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
+	-0.5f,	 0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
+	-0.5f,	-0.5f,	 0.5f,   0.0f,   0.0f,   1.0f,
 
-	-0.5f,	 0.5f,	 0.5f,
-	-0.5f,	 0.5f,	-0.5f,
-	-0.5f,	-0.5f,	-0.5f,
-	-0.5f,	-0.5f,	-0.5f,
-	-0.5f,	-0.5f,	 0.5f,
-	-0.5f,	 0.5f,	 0.5f,
+	-0.5f,	 0.5f,	 0.5f,  -1.0f,   0.0f,   0.0f,
+	-0.5f,	 0.5f,	-0.5f,  -1.0f,   0.0f,   0.0f,
+	-0.5f,	-0.5f,	-0.5f,  -1.0f,   0.0f,   0.0f,
+	-0.5f,	-0.5f,	-0.5f,  -1.0f,   0.0f,   0.0f,
+	-0.5f,	-0.5f,	 0.5f,  -1.0f,   0.0f,   0.0f,
+	-0.5f,	 0.5f,	 0.5f,  -1.0f,   0.0f,   0.0f,
 
-	 0.5f,	 0.5f,	 0.5f,
-	 0.5f,	 0.5f,	-0.5f,
-	 0.5f,	-0.5f,	-0.5f,
-	 0.5f,	-0.5f,	-0.5f,
-	 0.5f,	-0.5f,	 0.5f,
-	 0.5f,	 0.5f,	 0.5f,
+	 0.5f,	 0.5f,	 0.5f,   1.0f,   0.0f,   0.0f,
+	 0.5f,	 0.5f,	-0.5f,   1.0f,   0.0f,   0.0f,
+	 0.5f,	-0.5f,	-0.5f,   1.0f,   0.0f,   0.0f,
+	 0.5f,	-0.5f,	-0.5f,   1.0f,   0.0f,   0.0f,
+	 0.5f,	-0.5f,	 0.5f,   1.0f,   0.0f,   0.0f,
+	 0.5f,	 0.5f,	 0.5f,   1.0f,   0.0f,   0.0f,
 
-	-0.5f,	-0.5f,	-0.5f,
-	 0.5f,	-0.5f,	-0.5f,
-	 0.5f,	-0.5f,	 0.5f,
-	 0.5f,	-0.5f,	 0.5f,
-	-0.5f,	-0.5f,	 0.5f,
-	-0.5f,	-0.5f,	-0.5f,
+	-0.5f,	-0.5f,	-0.5f,   0.0f,   -1.0f,   0.0f,
+	 0.5f,	-0.5f,	-0.5f,   0.0f,   -1.0f,   0.0f,
+	 0.5f,	-0.5f,	 0.5f,   0.0f,   -1.0f,   0.0f,
+	 0.5f,	-0.5f,	 0.5f,   0.0f,   -1.0f,   0.0f,
+	-0.5f,	-0.5f,	 0.5f,   0.0f,   -1.0f,   0.0f,
+	-0.5f,	-0.5f,	-0.5f,   0.0f,   -1.0f,   0.0f,
 
-	-0.5f,	 0.5f,	-0.5f,
-	 0.5f,	 0.5f,	-0.5f,
-	 0.5f,	 0.5f,	 0.5f,
-	 0.5f,	 0.5f,	 0.5f,
-	-0.5f,	 0.5f,	 0.5f,
-	-0.5f,	 0.5f,	-0.5f,
+	-0.5f,	 0.5f,	-0.5f,   0.0f,    1.0f,   0.0f,
+	 0.5f,	 0.5f,	-0.5f,   0.0f,    1.0f,   0.0f,
+	 0.5f,	 0.5f,	 0.5f,   0.0f,    1.0f,   0.0f,
+	 0.5f,	 0.5f,	 0.5f,   0.0f,    1.0f,   0.0f,
+	-0.5f,	 0.5f,	 0.5f,   0.0f,    1.0f,   0.0f,
+	-0.5f,	 0.5f,	-0.5f,   0.0f,    1.0f,   0.0f,
 };
 
 float screenWidth = 800.0f;
@@ -117,13 +117,18 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(lightVAO);
 	// we only need to bind to the VBO, the container's VBO data is already here
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 #pragma endregion InterpretArray
 
@@ -138,6 +143,8 @@ int main()
 
 #pragma region RenderLoop
 	glEnable(GL_DEPTH_TEST);
+
+	const float lightRadius = 2.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -154,13 +161,17 @@ int main()
 
 		glBindVertexArray(VAO);
 
-		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		// model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		lightPos = glm::vec3(sin(glfwGetTime()) * lightRadius, 0.0f, cos(glfwGetTime()) * lightRadius);
 
 		objectShader.use();
 
 		objectShader.setMat4("model", 1, model);
 		objectShader.setMat4("view", 1, view);
 		objectShader.setMat4("projection", 1, projection);
+		objectShader.setVec3("viewPos", camera.Position);
+		objectShader.setVec3("lightPos", lightPos);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
